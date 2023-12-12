@@ -1,10 +1,15 @@
+using System.Net;
+using Polly;
+using Polly.Extensions.Http;
 using SearchService.Data;
+using SearchService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddHttpClient<AuctionSvcHttpClient>().AddPolicyHandler(GetPolicy());
 
 var app = builder.Build();
 
@@ -13,14 +18,21 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// connect and seed data into database
-try
+app.Lifetime.ApplicationStarted.Register(async () =>
 {
-  await DbInitializer.InitDb(app);
-}
-catch (Exception e)
-{
-  Console.WriteLine(e);
-}
+  // connect and seed data into database
+  try
+  {
+    await DbInitializer.InitDb(app);
+  }
+  catch (Exception e)
+  {
+    Console.WriteLine(e);
+  }
+});
 
 app.Run();
+
+// handle transient http error to constantly reconnect to auction services
+static IAsyncPolicy<HttpResponseMessage> GetPolicy()
+  => HttpPolicyExtensions.HandleTransientHttpError().OrResult(msg => msg.StatusCode == HttpStatusCode.NotFound).RetryForeverAsync(_ => TimeSpan.FromSeconds(3));
