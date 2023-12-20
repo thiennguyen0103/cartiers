@@ -34,12 +34,10 @@ public class AuctionController : ControllerBase
 
     if (!string.IsNullOrEmpty(date))
     {
-      query.Where(x => x.UpdatedAt.CompareTo(DateTime.Parse(date).ToUniversalTime()) > 0);
+      query = query.Where(x => x.UpdatedAt.CompareTo(DateTime.Parse(date).ToUniversalTime()) > 0);
     }
 
-    var auction = await query.ToListAsync();
-
-    return _mapper.Map<List<AuctionDto>>(await query.ToListAsync());
+    return await query.ProjectTo<AuctionDto>(_mapper.ConfigurationProvider).ToListAsync();
   }
 
   [HttpGet("{id}")]

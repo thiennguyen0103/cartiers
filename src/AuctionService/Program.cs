@@ -25,20 +25,27 @@ builder.Services.AddMassTransit(x =>
     o.UseBusOutbox();
   });
 
-  x.AddConsumersFromNamespaceContaining<AuctionFinishedConsumer>();
+  x.AddConsumersFromNamespaceContaining<AuctionCreatedFaultConsumer>();
+
+  x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("auction", false));
 
   x.UsingRabbitMq((context, cfg) =>
   {
-    cfg.Host(builder.Configuration["RabbitMq:Host"], "/", host =>
+    cfg.UseMessageRetry(r =>
     {
-      host.Username(builder.Configuration.GetValue("RabbitMq:Username", "guest"));
-      host.Password(builder.Configuration.GetValue("RabbitMq:Password", "guest"));
+      r.Handle<RabbitMqConnectionException>();
+      r.Interval(5, TimeSpan.FromSeconds(10));
     });
+
+    cfg.Host(builder.Configuration["RabbitMq:Host"], "/", host =>
+      {
+        host.Username(builder.Configuration.GetValue("RabbitMq:Username", "guest"));
+        host.Password(builder.Configuration.GetValue("RabbitMq:Password", "guest"));
+      });
 
     cfg.ConfigureEndpoints(context);
   });
 });
-
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
   .AddJwtBearer(options =>
   {

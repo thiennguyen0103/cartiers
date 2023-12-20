@@ -17,16 +17,16 @@ COPY src/GatewayService/GatewayService.csproj src/GatewayService/GatewayService.
 COPY src/Contracts/Contracts.csproj src/Contracts/Contracts.csproj
 COPY src/IdentityService/IdentityService.csproj src/IdentityService/IdentityService.csproj
 
-# restore package dependencies
-RUN dotnet restore Carties.sln
+# Restore package deps
+RUN dotnet restore Carsties.sln
 
-# copy app folders over
+# Copy the app folders over
 COPY src/AuctionService src/AuctionService
 COPY src/Contracts src/Contracts
 WORKDIR /app/src/AuctionService
 RUN dotnet publish -c Release -o /app/src/out
 
-# build run time image
+# Build runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /app
 COPY --from=build /app/src/out .
