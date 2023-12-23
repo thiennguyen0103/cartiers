@@ -1,17 +1,18 @@
-import { Car } from "lucide-react";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
+"use client";
+
+import { Button, DarkThemeToggle } from "flowbite-react";
+import Logo from "./logo";
+import SearchBar from "./search-bar";
 
 const Header = () => {
   return (
-    <div className="sticky top-0 z-50 flex h-16 items-center justify-between px-6 py-4 shadow-md">
-      <div>
-        <Car size={34} />
+    <div className="sticky top-0 z-50 flex h-16 items-center justify-between bg-white px-6 py-4 shadow-md">
+      <Logo />
+      <SearchBar />
+      <div className="flex gap-4">
+        <DarkThemeToggle />
+        <Button>Login</Button>
       </div>
-      <div>
-        <Input className="min-w-[300px]" placeholder="Search..." />
-      </div>
-      <Button>Login</Button>
     </div>
   );
 };
