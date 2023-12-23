@@ -2,6 +2,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+  options.AddPolicy("CorsPolicy", builder =>
+    builder.AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader());
+});
+
 builder.Services.AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 
@@ -14,20 +22,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
       options.TokenValidationParameters.NameClaimType = "username";
     });
 
-builder.Services.AddCors(options =>
-{
-  options.AddPolicy("customPolicy", b =>
-  {
-    b.AllowAnyOrigin()
-      .AllowAnyMethod()
-      .AllowAnyHeader()
-      .WithExposedHeaders("*");
-  });
-});
-
 var app = builder.Build();
 
-app.UseCors();
+app.UseCors(builder => builder
+  .AllowAnyOrigin()
+  .AllowAnyMethod()
+  .AllowAnyHeader()
+  .WithExposedHeaders("*"));
+
+//add cors
+app.UseCors("CorsPolicy");
 
 app.MapReverseProxy();
 

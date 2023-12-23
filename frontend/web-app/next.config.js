@@ -5,9 +5,9 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "utfs.io",
+        hostname: "cdn.pixabay.com",
         port: "",
-        pathname: "/f/**",
+        pathname: "/photo/**",
       },
     ],
   },

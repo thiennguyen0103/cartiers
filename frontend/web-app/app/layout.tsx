@@ -1,10 +1,9 @@
 import Header from "@/components/header";
-import { Toaster } from "@/components/ui/toaster";
-import { cn } from "@/lib/utils";
 import { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
 import { ReactNode } from "react";
 import "./globals.css";
+import { ThemeModeScript } from "flowbite-react";
 
 export const fontSans = FontSans({
   subsets: ["latin"],
@@ -23,16 +22,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head />
-      <body
-        className={cn(
-          "flex min-h-screen flex-col bg-background font-sans antialiased",
-          fontSans.variable,
-        )}
-      >
+      <head>
+        <ThemeModeScript />
+      </head>
+      <body className="flex min-h-screen flex-col bg-background font-sans antialiased">
         <Header />
         <main className="container mx-auto flex-1 p-6">{children}</main>
-        <Toaster />
       </body>
     </html>
   );
