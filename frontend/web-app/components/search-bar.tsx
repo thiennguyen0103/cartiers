@@ -1,3 +1,5 @@
+"use client";
+
 import { useParamsStore } from "@/hooks/useParamsStore";
 import { Search } from "lucide-react";
 import { KeyboardEvent, useRef } from "react";
