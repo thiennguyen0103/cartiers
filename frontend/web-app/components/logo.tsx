@@ -1,3 +1,5 @@
+"use client";
+
 function Logo() {
   return <div>Logo</div>;
 }
