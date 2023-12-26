@@ -1,11 +1,9 @@
-"use client";
-
-import AuctionList from "@/components/auction-list";
+import Listings from "./auctions/Listings";
 
 export default function Home() {
   return (
-    <main>
-      <AuctionList />
-    </main>
-  );
+    <div>
+      <Listings />
+    </div>
+  )
 }
