@@ -19,7 +19,7 @@ public class AuctionFinishedConsumer : IConsumer<AuctionFinished>
 
     var auction = await _dbContext.Auctions.FindAsync(Guid.Parse(context.Message.AuctionId));
 
-    if (context.Message.ItemSold is not null)
+    if (context.Message.ItemSold)
     {
       auction.Winner = context.Message.Winner;
       auction.SoldAmount = context.Message.Amount;
